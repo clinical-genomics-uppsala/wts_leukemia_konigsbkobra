@@ -59,6 +59,26 @@ module fusions:
 use rule * from fusions as fusions_*
 
 
+use rule arriba from fusions as fusions_arriba with:
+    output:
+        fusions="fusions/arriba/{sample}_{type}.fusions.tsv",
+        fusions_dis="fusions/arriba/{sample}_{type}.fusions.discarded.tsv",
+
+
+use rule fusioncatcher from fusions as fusions_fusioncatcher with:
+    output:
+        fusions="fusions/fusioncatcher/{sample}_{type}/final-list_candidate-fusion-genes.hg19.txt",
+        fusions_summary="fusions/fusioncatcher/{sample}_{type}/summary_candidate_fusions.txt",
+
+
+use rule star_fusion from fusions as fusions_star_fusion with:
+    output:
+        bam="fusions/star_fusion/{sample}_{type}/Aligned.out.bam",
+        fusions="fusions/star_fusion/{sample}_{type}/star-fusion.fusion_predictions.tsv",
+        fusions_abridged="fusions/star_fusion/{sample}_{type}/star-fusion.fusion_predictions.abridged.tsv",
+        sj="fusions/star_fusion/{sample}_{type}/SJ.out.tab",
+
+
 module prealignment:
     snakefile:
         github(
