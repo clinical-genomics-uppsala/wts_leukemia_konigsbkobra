@@ -1,0 +1,95 @@
+__author__ = "Martin Rippin"
+__copyright__ = "Copyright 2021, Martin Rippin"
+__email__ = "martin.rippin@igp.uu.se"
+__license__ = "GPL-3"
+
+
+include: "rules/common.smk"
+
+
+rule all:
+    input:
+        unpack(compile_output_list),
+
+
+module alignment:
+    snakefile:
+        github(
+            "hydra-genetics/alignment",
+            path="workflow/Snakefile",
+            tag=config["modules"]["alignment"],
+        )
+    config:
+        config
+
+
+use rule * from alignment as alignment_*
+
+
+module compression:
+    snakefile:
+        github(
+            "hydra-genetics/compression",
+            path="workflow/Snakefile",
+            tag=config["modules"]["compression"],
+        )
+    config:
+        config
+
+
+use rule * from compression as compression_*
+
+
+use rule spring from compression as compression_spring with:
+    output:
+        spring="compression/spring/{sample}_{flowcell}_{lane}_{barcode}_{type}.spring",
+
+
+module fusions:
+    snakefile:
+        github(
+            "hydra-genetics/fusions",
+            path="workflow/Snakefile",
+            tag=config["modules"]["fusions"],
+        )
+    config:
+        config
+
+
+use rule * from fusions as fusions_*
+
+
+module prealignment:
+    snakefile:
+        github(
+            "hydra-genetics/prealignment",
+            path="workflow/Snakefile",
+            tag=config["modules"]["prealignment"],
+        )
+    config:
+        config
+
+
+use rule * from prealignment as prealignment_*
+
+
+module qc:
+    snakefile:
+        github("hydra-genetics/qc", path="workflow/Snakefile", tag=config["modules"]["qc"])
+    config:
+        config
+
+
+use rule * from qc as qc_*
+
+
+use rule mosdepth_bed from qc as qc_mosdepth_bed with:
+    input:
+        bam="alignment/star/{sample}_{type}.bam",
+        bai="alignment/star/{sample}_{type}.bam.bai",
+
+
+use rule multiqc from qc as qc_multiqc with:
+    output:
+        html="qc/multiqc/multiqc_{report}.html",
+        directory=directory("qc/multiqc/multiqc_{report}_data"),
