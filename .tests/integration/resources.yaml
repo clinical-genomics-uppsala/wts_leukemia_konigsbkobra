@@ -4,11 +4,3 @@ default_resources:
   partition: "core"
   threads: 1
   time: "1:00:00"
-
-fq2bam:
-  gres: "--gres=gpu:1"
-  partition: "GPU"
-
-mutectcaller:
-  gres: "--gres=gpu:1"
-  partition: "GPU"

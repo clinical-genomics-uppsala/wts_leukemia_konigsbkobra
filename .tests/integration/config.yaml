@@ -3,13 +3,13 @@ samples: "samples.tsv"
 units: "units.tsv"
 
 modules:
-  alignment: "develop"
+  alignment: "906d25d0d4791eb5a54cba9954fddf29e27b85dd"
   compression: "v1.1.0"
-  fusions: "develop"
-  prealignment: "develop"
-  qc: "develop"
+  fusions: "1d538b680b6896d733bf57fb1e889c974c1f6c61"
+  prealignment: "1ccc6f954b3941966d7f55251a311caed47aca1e"
+  qc: "ca81558181c16766674ddc9179e27928e87cc32b"
 
-default_container: "docker://hydragenetics/common:0.1.0"
+default_container: "docker://hydragenetics/common:0.1.3"
 
 arriba:
   assembly: "reference/assembly.fasta"
