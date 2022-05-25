@@ -107,6 +107,7 @@ use rule mosdepth_bed from qc as qc_mosdepth_bed with:
     input:
         bam="alignment/star/{sample}_{type}.bam",
         bai="alignment/star/{sample}_{type}.bam.bai",
+        bed=config.get("mosdepth_bed", {}).get("design_bed", ""),
 
 
 use rule multiqc from qc as qc_multiqc with:
