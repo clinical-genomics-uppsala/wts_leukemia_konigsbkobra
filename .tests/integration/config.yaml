@@ -23,7 +23,7 @@ fusioncatcher:
 
 mosdepth_bed:
   container: "docker://hydragenetics/mosdepth:0.3.2"
-  design_bed: "reference/exomes.bed"
+  design_bed: "reference/exome.bed"
 
 multiqc:
   container: "docker://hydragenetics/multiqc:1.11"
