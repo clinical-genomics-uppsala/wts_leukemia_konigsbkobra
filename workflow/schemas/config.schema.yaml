@@ -4,44 +4,228 @@ type: object
 properties:
   resources:
     type: string
-    description: Path to resources.yaml file
+    description: path to resources.yaml file
+
   samples:
     type: string
-    description: Path to samples.tsv file
+    description: path to samples.tsv file
+
   units:
     type: string
-    description: Path to units.tsv file
+    description: path to units.tsv file
+
+  modules:
+    type: object
+    description: map module to version/branch/tag
+    properties:
+      alignment:
+        type: string
+        description: version/branch/tag
+      compression:
+        type: string
+        description: version/branch/tag
+      fusions:
+        type: string
+        description: version/branch/tag
+      prealignment:
+        type: string
+        description: version/branch/tag
+      qc:
+        type: string
+        description: version/branch/tag
+    required:
+      - alignment
+      - compression
+      - fusions
+      - prealignment
+      - qc
+
   trimmer_software:
     type: string
+    description: name of rule to be used for trimming
+
   default_container:
     type: string
     description: name or path to a default docker/singularity container
-  reference:
+
+  arriba:
     type: object
+    description: parameters for arriba
     properties:
-      fasta:
+      assembly:
         type: string
-        description: path to reference fasta file
-      sites:
+        description: path to assembly fasta file
+      blacklist:
         type: string
-        description: path to known sites list file
-    required:
-      - fasta
-      - sites
-  fastp_pe:
-    type: object
-    properties:
-      benchmark_repeats:
-        type: number
-        description: set number of times benchmark should be repeated for fastp_pe
+        description: path to list of fusions to exclude
       container:
         type: string
         description: name or path to docker/singularity container
-      extra:
+      gtf:
         type: string
-        description: parameters that should be forwarded to fastp
-  required:
-    - samples
-    - units
-    - resources
-    - default_container
+        description: path to gtf file containing annotations
+    required:
+      - assembly
+      - blacklist
+      - container
+      - gtf
+
+  fusioncatcher:
+    type: object
+    description: parameters for fusioncatcher
+    properties:
+      container:
+        type: string
+        description: name or path to docker/singularity container
+      genome_path:
+        type: string
+        description: path to fusionscatcher genome resource dir
+    required:
+      - container
+      - genome_path
+
+  mosdepth_bed:
+    type: object
+    description: parameters for mosdepth_bed
+    properties:
+      container:
+        type: string
+        description: name or path to docker/singularity container
+      design_bed:
+        type: string
+        description: path to bed file containing exome regions
+    required:
+      - container
+      - design_bed
+
+  multiqc:
+    type: object
+    description: parameters for multiqc
+    properties:
+      container:
+        type: string
+        description: name or path to docker/singularity container
+      reports:
+        type: object
+        description: report names
+        properties:
+          RNA:
+            type: object
+            description: information to compile report correctly
+            properties:
+              included_unit_types:
+                type: array
+                description: unit types to be part of this report
+              qc_files:
+                type: array
+                description: file names which should be included in report
+            required:
+              - included_unit_types
+              - qc_files
+        required:
+          - RNA
+      qc_files:
+        type: array
+        description: list of input files containing appropriate variables
+    required:
+      - container
+      - reports
+
+  rseqc_gene_body_coverage:
+    type: object
+    description: parameters for rseqc_gene_body_coverage
+    properties:
+      bed:
+        type: string
+        description: path to bed file
+      container:
+        type: string
+        description: name or path to docker/singularity container
+    required:
+      - bed
+      - container
+
+  rseqc_inner_distance:
+    type: object
+    description: parameters for rseqc_inner_distance
+    properties:
+      bed:
+        type: string
+        description: path to bed file
+      container:
+        type: string
+        description: name or path to docker/singularity container
+    required:
+      - bed
+      - container
+
+  sortmerna:
+    type: object
+    description: parameters for sortmerna
+    properties:
+      container:
+        type: string
+        description: name or path to docker/singularity container
+      fasta:
+        type: array
+        description: list of paths to fasta files containing ribosomal rna sequences
+      index:
+        type: string
+        description: path to sortmerna index for fasta files
+    required:
+      - container
+      - fasta
+      - index
+
+  star:
+    type: object
+    description: parameters for star
+    properties:
+      container:
+        type: string
+        description: name or path to docker/singularity container
+      genome_index:
+        type: string
+        description: path to genome resource
+    required:
+      - container
+      - genome_index
+
+  star_fusion:
+    type: object
+    description: parameters for star_fusion
+    properties:
+      container:
+        type: string
+        description: name or path to docker/singularity container
+      genome_path:
+        type: string
+        description: path to genome resource
+    required:
+      - container
+      - genome_path
+
+  star_fusion:
+    type: object
+    description: parameters for star_fusion
+    properties:
+      container:
+        type: string
+        description: name or path to docker/singularity container
+
+required:
+  - resources
+  - samples
+  - units
+  - modules
+  - default_container
+  - arriba
+  - fusioncatcher
+  - mosdepth_bed
+  - multiqc
+  - rseqc_gene_body_coverage
+  - rseqc_inner_distance
+  - sortmerna
+  - star
+  - star_fusion
+  - trimmer_software
