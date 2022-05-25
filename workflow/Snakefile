@@ -114,3 +114,18 @@ use rule multiqc from qc as qc_multiqc with:
     output:
         html="qc/multiqc/multiqc_{report}.html",
         directory=directory("qc/multiqc/multiqc_{report}_data"),
+
+
+use rule rseqc_gene_body_converage from qc as qc_rseqc_gene_body_converage with:
+    output:
+        pdf="qc/rseqc_gene_body_coverage/{sample}_{type}.geneBodyCoverage.curves.pdf",
+        rscrpt=temp("qc/rseqc_gene_body_coverage/{sample}_{type}.geneBodyCoverage.r"),
+        txt=temp("qc/rseqc_gene_body_coverage/{sample}_{type}.geneBodyCoverage.txt"),
+
+
+use rule rseqc_inner_distance from qc as qc_rseqc_inner_distance with:
+    output:
+        freq=temp("qc/rseqc_inner_distance/{sample}_{type}.inner_distance_freq.txt"),
+        plot="qc/rseqc_inner_distance/{sample}_{type}.inner_distance_plot.pdf",
+        rscrpt=temp("qc/rseqc_inner_distance/{sample}_{type}.inner_distance_plot.r"),
+        txt=temp("qc/rseqc_inner_distance/{sample}_{type}.inner_distance.txt"),
