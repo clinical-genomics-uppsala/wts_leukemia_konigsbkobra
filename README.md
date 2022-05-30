@@ -60,7 +60,20 @@ The following information need to be added to these files:
 Reference files should be specified in
 [`config.yaml`](https://github.com/clinical-genomics-uppsala/wts_leukemia_konigskobra/blob/develop/config/config.yaml)
 
-1. 
+1. Arriba needs several resources to run properly which can be downloaded via
+[this script](https://github.com/suhrig/arriba/blob/master/download_references.sh) and the appropriate blacklists
+are part of the [release tarballs](https://github.com/suhrig/arriba/releases).
+2. Secondly, fusioncatcher needs a reference which can be retrieved following the instuctions at
+[github](https://github.com/ndaniel/fusioncatcher/blob/master/doc/manual.md#521---direct-download-of-human-build-data).
+3. Mosdepth requires a `.bed` file specifying the whole exome.
+4. The RSeQC scripts run with a gene model file which can be downloaded from
+[sourceforge](https://sourceforge.net/projects/rseqc/files/BED/Human_Homo_sapiens/).
+5. For SortMeRNA, a list of `.fasta` files, containing rRNA sequences, should be supplied. These can be retrieved
+from the [SortMeRNA repository](https://github.com/biocore/sortmerna/tree/master/data). In addition, they need
+to be indexed.
+6. STAR requires an indexed genome `.fasta` file which should be the same as the assembly file from arriba.
+7. In case of STAR-Fusion, CTAT resources can be found
+[here](https://data.broadinstitute.org/Trinity/CTAT_RESOURCE_LIB/).
 
 ## :rocket: Usage
 
@@ -77,6 +90,9 @@ snakemake --profile my-profile
 | File | Description |
 |---|---|
 | `compression/spring/{sample}_{flowcell}_{lane}_{barcode}_{type}.spring` | compressed `.fastq` file pair |
+| `fusions/arriba/{sample}_{type}.fusions.tsv` | table containing fusions called by arriba |
+| `fusions/fusioncatcher/{sample}_{type}.final-list_candidate-fusion-genes.hg19.txt` | table containing fusions called by Fusioncatcher |
+| `fusions/star_fusion/{sample}_{type}.star-fusion.fusion_predictions.tsv` | table containing fusions called by STAR-Fusion |
 | `qc/multiqc/multiqc_RNA.html` | `.html` report from MultiQC |
 
 ## :judge: Rule Graph
