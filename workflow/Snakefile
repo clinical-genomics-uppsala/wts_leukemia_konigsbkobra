@@ -1,0 +1,131 @@
+__author__ = "Martin Rippin"
+__copyright__ = "Copyright 2021, Martin Rippin"
+__email__ = "martin.rippin@igp.uu.se"
+__license__ = "GPL-3"
+
+
+include: "rules/common.smk"
+
+
+rule all:
+    input:
+        unpack(compile_output_list),
+
+
+module alignment:
+    snakefile:
+        github(
+            "hydra-genetics/alignment",
+            path="workflow/Snakefile",
+            tag=config["modules"]["alignment"],
+        )
+    config:
+        config
+
+
+use rule * from alignment as alignment_*
+
+
+module compression:
+    snakefile:
+        github(
+            "hydra-genetics/compression",
+            path="workflow/Snakefile",
+            tag=config["modules"]["compression"],
+        )
+    config:
+        config
+
+
+use rule * from compression as compression_*
+
+
+use rule spring from compression as compression_spring with:
+    output:
+        spring="compression/spring/{sample}_{flowcell}_{lane}_{barcode}_{type}.spring",
+
+
+module fusions:
+    snakefile:
+        github(
+            "hydra-genetics/fusions",
+            path="workflow/Snakefile",
+            tag=config["modules"]["fusions"],
+        )
+    config:
+        config
+
+
+use rule * from fusions as fusions_*
+
+
+use rule arriba from fusions as fusions_arriba with:
+    output:
+        fusions="fusions/arriba/{sample}_{type}.fusions.tsv",
+        fusions_dis="fusions/arriba/{sample}_{type}.fusions.discarded.tsv",
+
+
+use rule fusioncatcher from fusions as fusions_fusioncatcher with:
+    output:
+        fusions="fusions/fusioncatcher/{sample}_{type}/final-list_candidate-fusion-genes.hg19.txt",
+        fusions_summary="fusions/fusioncatcher/{sample}_{type}/summary_candidate_fusions.txt",
+
+
+use rule star_fusion from fusions as fusions_star_fusion with:
+    output:
+        bam="fusions/star_fusion/{sample}_{type}/Aligned.out.bam",
+        fusions="fusions/star_fusion/{sample}_{type}/star-fusion.fusion_predictions.tsv",
+        fusions_abridged="fusions/star_fusion/{sample}_{type}/star-fusion.fusion_predictions.abridged.tsv",
+        sj="fusions/star_fusion/{sample}_{type}/SJ.out.tab",
+
+
+module prealignment:
+    snakefile:
+        github(
+            "hydra-genetics/prealignment",
+            path="workflow/Snakefile",
+            tag=config["modules"]["prealignment"],
+        )
+    config:
+        config
+
+
+use rule * from prealignment as prealignment_*
+
+
+module qc:
+    snakefile:
+        github("hydra-genetics/qc", path="workflow/Snakefile", tag=config["modules"]["qc"])
+    config:
+        config
+
+
+use rule * from qc as qc_*
+
+
+use rule mosdepth_bed from qc as qc_mosdepth_bed with:
+    input:
+        bam="alignment/star/{sample}_{type}.bam",
+        bai="alignment/star/{sample}_{type}.bam.bai",
+        bed=config.get("mosdepth_bed", {}).get("design_bed", ""),
+
+
+use rule multiqc from qc as qc_multiqc with:
+    output:
+        html="qc/multiqc/multiqc_{report}.html",
+        directory=directory("qc/multiqc/multiqc_{report}_data"),
+
+
+use rule rseqc_gene_body_converage from qc as qc_rseqc_gene_body_converage with:
+    output:
+        pdf="qc/rseqc_gene_body_coverage/{sample}_{type}.geneBodyCoverage.curves.pdf",
+        rscrpt=temp("qc/rseqc_gene_body_coverage/{sample}_{type}.geneBodyCoverage.r"),
+        txt=temp("qc/rseqc_gene_body_coverage/{sample}_{type}.geneBodyCoverage.txt"),
+
+
+use rule rseqc_inner_distance from qc as qc_rseqc_inner_distance with:
+    output:
+        freq=temp("qc/rseqc_inner_distance/{sample}_{type}.inner_distance_freq.txt"),
+        plot="qc/rseqc_inner_distance/{sample}_{type}.inner_distance_plot.pdf",
+        rscrpt=temp("qc/rseqc_inner_distance/{sample}_{type}.inner_distance_plot.r"),
+        txt=temp("qc/rseqc_inner_distance/{sample}_{type}.inner_distance.txt"),
