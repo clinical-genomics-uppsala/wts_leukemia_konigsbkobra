@@ -47,32 +47,29 @@ wildcard_constraints:
 
 
 def compile_output_list(wildcards):
-    output_list=["qc/multiqc/multiqc_RNA.html"]
+    output_list=["Results/MultiQC_RNA.html"]
     files={
         "star_fusion": [
-            "star-fusion.fusion_predictions.tsv",
+            "tsv",
         ],
         "fusioncatcher": [
-            "final-list_candidate-fusion-genes.hg19.txt",
+            "txt",
+        ],
+        "arriba": [
+            "tsv"
         ],
     }
     output_list.append(
         [
-            "fusions/%s/%s_R/%s" % (prefix, sample, suffix)
-            for prefix in files.keys()
+            "Results/%s/%s/RNA_fusions/%s_R.%s.%s" % (samples.loc[(sample)]["project"], sample, sample, method, suffix)
+            for method in files.keys()
             for sample in get_samples(samples)
-            for suffix in files[prefix]
+            for suffix in files[method]
         ]
     )
     output_list.append(
         [
-            "fusions/arriba/%s_R.fusions.tsv" % (sample)
-            for sample in get_samples(samples)
-        ]
-    )
-    output_list.append(
-        [
-            "compression/spring/%s_%s_%s_%s_%s.spring" % (sample, flowcell, lane, barcode, t)
+            "Archive/%s/%s_%s_%s_%s_%s.spring" % (samples.loc[(sample)]["project"], sample, flowcell, lane, barcode, t)
             for sample in get_samples(samples)
             for t in get_unit_types(units, sample)
             for flowcell in set(
