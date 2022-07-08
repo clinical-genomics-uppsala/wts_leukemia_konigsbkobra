@@ -69,6 +69,13 @@ def compile_output_list(wildcards):
     )
     output_list.append(
         [
+        "Results/%s/%s/Cram/%s_R.bam%s" % (samples.loc[(sample)]["project"], sample, sample, ext)
+        for sample in get_samples(samples)
+        for ext in ["", ".bai"]
+        ]
+    )
+    output_list.append(
+        [
             "Archive/%s/%s_%s_%s_%s_%s.spring" % (samples.loc[(sample)]["project"], sample, flowcell, lane, barcode, t)
             for sample in get_samples(samples)
             for t in get_unit_types(units, sample)

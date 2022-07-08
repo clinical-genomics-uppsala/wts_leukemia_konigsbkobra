@@ -31,6 +31,24 @@ rule cp_fusioncatcher:
         "cp {input} {output}"
 
 
+rule cp_cram:
+    input:
+        "alignment/star/{sample}_R.bam"
+    output:
+        "Results/{project}/{sample}/Cram/{sample}_R.bam"
+    shell:
+        "cp {input} {output}"
+
+
+rule cp_crai:
+    input:
+        "alignment/star/{sample}_R.bam.bai"
+    output:
+        "Results/{project}/{sample}/Cram/{sample}_R.bam.bai"
+    shell:
+        "cp {input} {output}"
+
+
 rule cp_multiqc:
     input:
         "qc/multiqc/multiqc_RNA.html",
@@ -43,8 +61,8 @@ rule cp_multiqc:
 
 rule cp_spring_archive:
     input:
-        "compression/spring/{sample}_{flowcell}_{lane}_{barcode}_{type}.spring",
+        "compression/spring/{sample}_{flowcell}_{lane}_{barcode}_R.spring",
     output:
-        "Archive/{project}/{sample}_{flowcell}_{lane}_{barcode}_{type}.spring",
+        "Archive/{project}/{sample}_{flowcell}_{lane}_{barcode}_R.spring",
     shell:
         "cp {input} {output}"

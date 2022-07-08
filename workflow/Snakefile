@@ -8,6 +8,9 @@ include: "rules/common.smk"
 include: "rules/cp_results.smk"
 
 
+ruleorder: cp_crai > alignment_samtools_index
+
+
 rule all:
     input:
         unpack(compile_output_list),
