@@ -15,7 +15,7 @@ rule cp_arriba:
 
 rule cp_arriba_pdf:
     input:
-        "fusions/arriba_draw_fusion/{sample}_{type}.pdf",
+        "fusions/arriba_draw_fusion/{sample}_R.pdf",
     output:
         "Results/{project}/{sample}/RNA_fusions/{sample}_R.arriba.pdf",
     shell:
