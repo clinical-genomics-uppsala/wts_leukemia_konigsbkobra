@@ -47,17 +47,15 @@ wildcard_constraints:
 
 
 def compile_output_list(wildcards):
-    output_list=["Results/MultiQC_RNA.html"]
-    files={
+    output_list = ["Results/MultiQC_RNA.html"]
+    files = {
         "star_fusion": [
             "tsv",
         ],
         "fusioncatcher": [
             "txt",
         ],
-        "arriba": [
-            "tsv"
-        ],
+        "arriba": ["tsv", "pdf"],
     }
     output_list.append(
         [
@@ -69,9 +67,9 @@ def compile_output_list(wildcards):
     )
     output_list.append(
         [
-        "Results/%s/%s/Cram/%s_R.bam%s" % (samples.loc[(sample)]["project"], sample, sample, ext)
-        for sample in get_samples(samples)
-        for ext in ["", ".bai"]
+            "Results/%s/%s/Cram/%s_R.bam%s" % (samples.loc[(sample)]["project"], sample, sample, ext)
+            for sample in get_samples(samples)
+            for ext in ["", ".bai"]
         ]
     )
     output_list.append(

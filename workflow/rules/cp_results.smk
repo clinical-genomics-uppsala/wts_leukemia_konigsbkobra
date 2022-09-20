@@ -13,6 +13,15 @@ rule cp_arriba:
         "cp {input} {output}"
 
 
+rule cp_arriba_pdf:
+    input:
+        "fusions/arriba_draw_fusion/{sample}_{type}.pdf",
+    output:
+        "Results/{project}/{sample}/RNA_fusions/{sample}_R.arriba.pdf",
+    shell:
+        "cp {input} {output}"
+
+
 rule cp_star_fusion:
     input:
         "fusions/star_fusion/{sample}_R/star-fusion.fusion_predictions.tsv",
@@ -33,18 +42,18 @@ rule cp_fusioncatcher:
 
 rule cp_cram:
     input:
-        "alignment/star/{sample}_R.bam"
+        "alignment/star/{sample}_R.bam",
     output:
-        "Results/{project}/{sample}/Cram/{sample}_R.bam"
+        "Results/{project}/{sample}/Cram/{sample}_R.bam",
     shell:
         "cp {input} {output}"
 
 
 rule cp_crai:
     input:
-        "alignment/star/{sample}_R.bam.bai"
+        "alignment/star/{sample}_R.bam.bai",
     output:
-        "Results/{project}/{sample}/Cram/{sample}_R.bam.bai"
+        "Results/{project}/{sample}/Cram/{sample}_R.bam.bai",
     shell:
         "cp {input} {output}"
 
@@ -56,7 +65,6 @@ rule cp_multiqc:
         "Results/MultiQC_RNA.html",
     shell:
         "cp {input} {output}"
-
 
 
 rule cp_spring_archive:
